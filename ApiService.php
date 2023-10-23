@@ -1,24 +1,25 @@
 <?php
 
+use Data;
+
 class ApiService
 {
-    function account_list($client, $result)
-    {
-        if (mysqli_num_rows($result) > 0) {
-            while($row = mysqli_fetch_assoc($result)) {
-                if($row["client_id"] == $client){
-                    echo $row["id"];
-                }
-            }
-        }
+    protected $data;
+    public function __construct(Data $data){
+        $this->data = $data;
     }
 
-    function transaction_history($account_id)
+    function account_list($id)
     {
-        //
+        $this->data->get_list("SELECT id FROM accounts WHERE client_id = '$id'");
     }
 
-    function fund_transfer($account_id_1, $account_id_2, $transfer_amount, $currency_code_1, $currency_code_2)
+    function transaction_history($id)
+    {
+        $this->data->get_list("SELECT * FROM accounts WHERE sender_id = '$id' OR receiver_id = '$id'");
+    }
+
+    function fund_transfer($sender_id, $receiver_id, $amount)
     {
         //
     }

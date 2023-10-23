@@ -1,37 +1,33 @@
 <?php
 
-$host = "localhost";
-$port = "3306";
-$user = "root";
-$password = "root";
-$database = "transfer_accounts";
 
-$connection = new mysqli("$host:$port", $user, $password, $database);
+class Data
+{
+    
+    protected $host = "localhost";
+    protected $port = "3306";
+    protected $user = "root";
+    protected $password = "root";
+    protected $database = "transfer_accounts";
 
-if ($conn->connect_error) {
-    die("Connection failed: ". $conn->connect_error);
+    protected $connection = new mysqli($this->host, $this->port, $this->user, $this->password, $this->database);
+
+    function __construct(){
+        if ($this->connection->connect_error) {
+            die("Connection failed: ". $this->connection->connect_error);
+        }
+    }
+
+    function get_list($query){
+        $list = array();
+        $result = mysqli_query($this->connection, $query);
+        if (!$result) {
+            die("Query failed: " . mysqli_error($this->connection));
+        }
+        while ($row = mysqli_fetch_assoc($result))
+        {
+            $list[] = $row;
+        }
+    }
 }
-
-$query = "SELECT * FROM accounts";
-$result = mysqli_query($connection, $query);
-if (!$result) {
-    die("Query failed: " . mysqli_error($connection));
-}
-$accounts = array();
-while ($row = mysqli_fetch_assoc($result)) {
-    $accounts[] = $row;
-}
-
-$query = "SELECT * FROM transactions";
-$result = mysqli_query($connection, $query);
-if (!$result) {
-    die("Query failed: " . mysqli_error($connection));
-}
-$transactions = array();
-while ($row = mysqli_fetch_assoc($result)) {
-    $transactions[] = $row;
-}
-
-mysqli_close($conn);
-
 ?>
